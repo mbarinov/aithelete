@@ -1,113 +1,355 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { motion, AnimatePresence } from "framer-motion";
+import { experimental_useObject as useObject } from "ai/react";
+import {
+  User,
+  Ruler,
+  Scales,
+  Barbell,
+  CaretRight,
+  CaretLeft,
+  Sparkle,
+  ArrowClockwise,
+  GenderMale,
+  GenderFemale,
+  GenderIntersex,
+  Person,
+  PersonSimpleRun,
+} from "phosphor-react";
+import { TrainingProgramSchema } from "@/lib/schema";
+
+export default function Component() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    age: "",
+    sex: "",
+    height: "",
+    weight: "",
+    sportCondition: "",
+  });
+
+  const { submit, object, isLoading, error } = useObject({
+    api: "/api/generate-program",
+    schema: TrainingProgramSchema,
+  });
+
+  const updateFormData = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const generateProgram = async () => {
+    submit(formData);
+  };
+
+  const nextStep = () => {
+    if (step < 5) setStep(step + 1);
+    if (step === 5) generateProgram();
+  };
+
+  const prevStep = () => {
+    if (step > 1) setStep(step - 1);
+  };
+
+  const resetForm = () => {
+    setStep(1);
+    setFormData({
+      age: "",
+      sex: "",
+      height: "",
+      weight: "",
+      sportCondition: "",
+    });
+  };
+
+  const renderFormStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <div className="space-y-4">
+            <Label htmlFor="age">How old are you?</Label>
+            <div className="flex items-center space-x-2">
+              <User className="text-muted-foreground" />
+              <Input
+                id="age"
+                type="number"
+                value={formData.age}
+                onChange={(e) => updateFormData("age", e.target.value)}
+                placeholder="Enter your age"
+              />
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-4">
+            <Label>What&apos;s your biological sex?</Label>
+            <div className="flex space-x-4">
+              <Button
+                variant={formData.sex === "male" ? "default" : "outline"}
+                onClick={() => updateFormData("sex", "male")}
+              >
+                <GenderMale className="mr-2 h-4 w-4" />
+                Male
+              </Button>
+              <Button
+                variant={formData.sex === "female" ? "default" : "outline"}
+                onClick={() => updateFormData("sex", "female")}
+              >
+                <GenderFemale className="mr-2 h-4 w-4" />
+                Female
+              </Button>
+              <Button
+                variant={formData.sex === "other" ? "default" : "outline"}
+                onClick={() => updateFormData("sex", "other")}
+              >
+                <GenderIntersex className="mr-2 h-4 w-4" />
+                Other
+              </Button>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="space-y-4">
+            <Label htmlFor="height">How tall are you?</Label>
+            <div className="flex items-center space-x-2">
+              <Ruler className="text-muted-foreground" />
+              <Input
+                id="height"
+                type="number"
+                value={formData.height}
+                onChange={(e) => updateFormData("height", e.target.value)}
+                placeholder="Height in cm"
+              />
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="space-y-4">
+            <Label htmlFor="weight">What&apos;s your weight?</Label>
+            <div className="flex items-center space-x-2">
+              <Scales className="text-muted-foreground" />
+              <Input
+                id="weight"
+                type="number"
+                value={formData.weight}
+                onChange={(e) => updateFormData("weight", e.target.value)}
+                placeholder="Weight in kg"
+              />
+            </div>
+          </div>
+        );
+      case 5:
+        return (
+          <div className="space-y-4">
+            <Label>What&apos;s your current fitness level?</Label>
+            <div className="flex space-x-4">
+              <Button
+                variant={
+                  formData.sportCondition === "beginner" ? "default" : "outline"
+                }
+                onClick={() => updateFormData("sportCondition", "beginner")}
+              >
+                <Person className="mr-2 h-4 w-4" />
+                Beginner
+              </Button>
+              <Button
+                variant={
+                  formData.sportCondition === "intermediate"
+                    ? "default"
+                    : "outline"
+                }
+                onClick={() => updateFormData("sportCondition", "intermediate")}
+              >
+                <PersonSimpleRun className="mr-2 h-4 w-4" />
+                Intermediate
+              </Button>
+              <Button
+                variant={
+                  formData.sportCondition === "advanced" ? "default" : "outline"
+                }
+                onClick={() => updateFormData("sportCondition", "advanced")}
+              >
+                <Barbell className="mr-2 h-4 w-4" />
+                Advanced
+              </Button>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderProgram = () => {
+    if (!object) return null;
+
+    try {
+      return (
+        <div className="space-y-8">
+          {object.exercises?.map((workout, index) => (
+            <Card key={index}>
+              <CardHeader>
+                <CardTitle>
+                  Day {workout?.day}: {workout?.workoutName}
+                </CardTitle>
+                <CardDescription>{workout?.workoutDescription}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {workout?.workout?.map((exercise) => (
+                    <Card key={exercise?.name}>
+                      <CardHeader>
+                        <CardTitle>{exercise?.name}</CardTitle>
+                        <CardDescription>
+                          {exercise?.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <p>
+                          <strong>Category:</strong> {exercise?.category}
+                        </p>
+                        <p>
+                          <strong>Muscle Groups:</strong>{" "}
+                          {exercise?.muscleGroups?.join(", ")}
+                        </p>
+                        <p>
+                          <strong>Equipment:</strong>{" "}
+                          {exercise?.equipment?.join(", ")}
+                        </p>
+                        <p>
+                          <strong>Sets:</strong> {exercise?.sets}
+                        </p>
+                        <p>
+                          <strong>Reps:</strong> {exercise?.reps}
+                        </p>
+                        {exercise?.weight && (
+                          <p>
+                            <strong>Weight:</strong> {exercise.weight.amount}{" "}
+                            {exercise.weight.unit}
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      </div>
+      );
+    } catch (error) {
+      console.error("Failed to parse program:", error);
+      return <p>Failed to generate program. Please try again.</p>;
+    }
+  };
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+  return (
+    <div className="max-w-2xl mx-auto p-4 bg-gradient-to-br from-purple-100 to-blue-100 min-h-screen flex items-center justify-center">
+      <AnimatePresence mode="wait">
+        {!object ? (
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.5 }}
+            className="w-full"
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-center">
+                  🏋️‍♀️ AI FitPlan Generator 🏃‍♂️
+                </CardTitle>
+                <CardDescription className="text-center">
+                  Create your personalized AI-powered training program in just a
+                  few steps!
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Progress value={(step / 5) * 100} className="mb-4" />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={step}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {renderFormStep()}
+                  </motion.div>
+                </AnimatePresence>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                {step > 1 && (
+                  <Button onClick={prevStep} variant="outline">
+                    <CaretLeft className="mr-2 h-4 w-4" /> Back
+                  </Button>
+                )}
+                <div className={step === 1 ? "ml-auto" : ""}>
+                  <Button onClick={nextStep} disabled={isLoading}>
+                    {step < 5 ? (
+                      <>
+                        Next <CaretRight className="ml-2 h-4 w-4" />
+                      </>
+                    ) : (
+                      <>
+                        {isLoading ? "Generating..." : "Generate"}{" "}
+                        <Sparkle className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardFooter>
+            </Card>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="program"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.5 }}
+            className="w-full"
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-center">
+                  <Barbell className="mr-2" />
+                  Your AI-Generated Training Program
+                </CardTitle>
+              </CardHeader>
+              <CardContent>{renderProgram()}</CardContent>
+              <CardFooter className="flex justify-center">
+                <Button onClick={resetForm} variant="outline">
+                  <ArrowClockwise className="mr-2 h-4 w-4" />
+                  Generate New Program
+                </Button>
+              </CardFooter>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {error && (
+        <div className="text-red-500 mt-4 text-center">
+          An error occurred while generating your program. Please try again.
+        </div>
+      )}
+    </div>
   );
 }
