@@ -47,7 +47,7 @@ export default function Component() {
     schema: TrainingProgramSchema,
   });
 
-  const updateFormData = (field, value) => {
+  const updateFormData = (field: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -345,7 +345,7 @@ export default function Component() {
           </motion.div>
         )}
       </AnimatePresence>
-      {error && (
+      {!!error && (
         <div className="text-red-500 mt-4 text-center">
           An error occurred while generating your program. Please try again.
         </div>
