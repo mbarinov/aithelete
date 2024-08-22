@@ -68,7 +68,7 @@ Workouts: List of workouts following the Workout schema
 When creating a training program, you should structure your response according to this schema. Each workout should have a day, name, description, and a list of exercises. For each exercise, provide all the required information including name, description, category, muscle groups, equipment, sets, reps, and weight (if applicable).
   `;
 
-  const { object, usage } = await generateObject({
+  const { object } = await generateObject({
     model: openai("gpt-4o-mini"),
     schema: TrainingProgramSchema,
     mode: "json",
@@ -77,8 +77,6 @@ When creating a training program, you should structure your response according t
     prompt,
     system,
   });
-
-  console.log(usage);
 
   return Response.json(object);
 }
