@@ -260,96 +260,98 @@ export default function Component() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-gradient-to-br from-purple-100 to-blue-100 min-h-screen flex items-center justify-center">
-      <AnimatePresence mode="wait">
-        {!object ? (
-          <motion.div
-            key="form"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.5 }}
-            className="w-full"
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-center">
-                  🏋️‍♀️ AI FitPlan Generator 🏃‍♂️
-                </CardTitle>
-                <CardDescription className="text-center">
-                  Create your personalized AI-powered training program in just a
-                  few steps!
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Progress value={(step / 5) * 100} className="mb-4" />
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={step}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {renderFormStep()}
-                  </motion.div>
-                </AnimatePresence>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                {step > 1 && (
-                  <Button onClick={prevStep} variant="outline">
-                    <CaretLeft className="mr-2 h-4 w-4" /> Back
+    <div className="bg-gradient-to-br from-purple-100 to-blue-100 min-h-screen flex items-center justify-center">
+      <div className="max-w-2xl mx-auto p-4 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          {!object ? (
+            <motion.div
+              key="form"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.5 }}
+              className="w-full"
+            >
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl font-bold text-center">
+                    🏋️‍♀️ AIthelete 🏃‍♂️
+                  </CardTitle>
+                  <CardDescription className="text-center">
+                    Create your personalized AI-powered training program in just
+                    a few steps!
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Progress value={(step / 5) * 100} className="mb-4" />
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={step}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -50 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {renderFormStep()}
+                    </motion.div>
+                  </AnimatePresence>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  {step > 1 && (
+                    <Button onClick={prevStep} variant="outline">
+                      <CaretLeft className="mr-2 h-4 w-4" /> Back
+                    </Button>
+                  )}
+                  <div className={step === 1 ? "ml-auto" : ""}>
+                    <Button onClick={nextStep} disabled={isLoading}>
+                      {step < 5 ? (
+                        <>
+                          Next <CaretRight className="ml-2 h-4 w-4" />
+                        </>
+                      ) : (
+                        <>
+                          {isLoading ? "Generating..." : "Generate"}{" "}
+                          <Sparkle className="ml-2 h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardFooter>
+              </Card>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="program"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.5 }}
+              className="w-full"
+            >
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-center">
+                    <Barbell className="mr-2" />
+                    Your AI-Generated Training Program
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>{renderProgram()}</CardContent>
+                <CardFooter className="flex justify-center">
+                  <Button onClick={resetForm} variant="outline">
+                    <ArrowClockwise className="mr-2 h-4 w-4" />
+                    Generate New Program
                   </Button>
-                )}
-                <div className={step === 1 ? "ml-auto" : ""}>
-                  <Button onClick={nextStep} disabled={isLoading}>
-                    {step < 5 ? (
-                      <>
-                        Next <CaretRight className="ml-2 h-4 w-4" />
-                      </>
-                    ) : (
-                      <>
-                        {isLoading ? "Generating..." : "Generate"}{" "}
-                        <Sparkle className="ml-2 h-4 w-4" />
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="program"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.5 }}
-            className="w-full"
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-center">
-                  <Barbell className="mr-2" />
-                  Your AI-Generated Training Program
-                </CardTitle>
-              </CardHeader>
-              <CardContent>{renderProgram()}</CardContent>
-              <CardFooter className="flex justify-center">
-                <Button onClick={resetForm} variant="outline">
-                  <ArrowClockwise className="mr-2 h-4 w-4" />
-                  Generate New Program
-                </Button>
-              </CardFooter>
-            </Card>
-          </motion.div>
+                </CardFooter>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        {!!error && (
+          <div className="text-red-500 mt-4 text-center">
+            An error occurred while generating your program. Please try again.
+          </div>
         )}
-      </AnimatePresence>
-      {!!error && (
-        <div className="text-red-500 mt-4 text-center">
-          An error occurred while generating your program. Please try again.
-        </div>
-      )}
+      </div>
     </div>
   );
 }
