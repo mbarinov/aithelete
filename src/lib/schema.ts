@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const EquipmentEnum = z.enum([
+export const EquipmentEnum = z.enum([
   "Barbell",
   "Dumbbell",
   "Bodyweight",
@@ -21,12 +21,12 @@ const EquipmentEnum = z.enum([
 ]);
 
 const CategoryEnum = z.enum(["Strength", "Cardio", "Flexibility"]);
-const ExerciseEnum = z.enum([
+export const ExerciseEnum = z.enum([
   "Bench Press",
   "Squat",
   "Deadlift",
   "Pull-Up",
-  "Push-Up",
+  "Pull-Up (Assisted)",
   "Overhead Press",
   "Rowing",
   "Bicep Curl",
@@ -80,6 +80,7 @@ const ExerciseSchema = z.object({
   sets: z.number().default(3),
   reps: z.number().default(8),
   weight: WeightSchema.optional().nullable(),
+  assistWeight: WeightSchema.optional().nullable(),
 });
 
 export const WorkoutSchema = z.object({
@@ -87,8 +88,21 @@ export const WorkoutSchema = z.object({
   workoutName: z.string(),
   workoutDescription: z.string(),
   workout: z.array(ExerciseSchema),
+  duration: z.number(),
+  caloriesBurned: z.number(),
 });
 
 export const TrainingProgramSchema = z.object({
+  metadata: z.object({
+    programName: z.string(),
+    programDescription: z.string(),
+    personalInfo: z.object({
+        age: z.number(),
+        weight: z.number(),
+        height: z.number(),
+        fitnessLevel: z.enum(["beginner", "intermediate", "advanced"]),
+        gender: z.enum(["male", "female", "other"]),
+    })
+  }),
   exercises: z.array(WorkoutSchema),
 });

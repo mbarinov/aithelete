@@ -1,82 +1,59 @@
-import { generateObject } from "ai";
-import { openai } from "@ai-sdk/openai";
-import { TrainingProgramSchema } from "@/lib/schema";
-
-export const runtime = "edge";
+import {generateObject} from "ai";
+import { openai} from "@ai-sdk/openai";
+import {TrainingProgramSchema, ExerciseEnum, EquipmentEnum} from "@/lib/schema";
 
 export async function POST(req: Request) {
-  const { age, sex, height, weight, fitnessLevel } = await req.json();
+    const {age, sex, height, weight, fitnessLevel} = await req.json();
 
-  const prompt = `
-Generate a personalized 3-day split training program for a ${age}-year-old ${sex}, ${height} cm tall, weighing ${weight} kg, with an ${fitnessLevel} fitness level. The program should be well-structured, targeting specific muscle groups on each day to ensure comprehensive development and recovery.
+    const availableExercises = ExerciseEnum.options.join(", ");
+    const availableEquipment = EquipmentEnum.options.join(", ");
 
-Requirements:
+    const prompt = `
+    Generate a personalized 3-day split training program for a ${age}-year-old ${sex}, ${height} cm tall, weighing ${weight} kg, at a ${fitnessLevel} fitness level. The program should be well-structured, targeting specific muscle groups each day to ensure balanced development and adequate recovery.
 
-Split Focus: Design each day to focus on a different major muscle group or combination of muscle groups (e.g., Chest/Triceps, Back/Biceps, Legs/Shoulders). Ensure that the muscle groups targeted on consecutive days do not overlap significantly to allow for proper recovery.
-Exercise Structure: Each day should consist of a balanced number of exercises, varying between 4 to 8 exercises depending on the focus of the workout. Specify the name of each exercise, the number of sets and repetitions, and the recommended weight (in kg) where applicable.
-Workout Day Details: Provide a unique and descriptive name for each workout day that reflects the targeted muscle group(s). Include a brief description (2-3 sentences) summarizing the goals and key features of the workout.
-Adaptation: Ensure the exercises are suited to an ${fitnessLevel} fitness level, offering appropriate challenges while avoiding overtraining.
+**Available Exercises:** ${availableExercises}
+**Available Equipment:** ${availableEquipment}
 
-Additional Notes:
-Include compound movements that engage multiple muscle groups along with isolation exercises for focused muscle engagement.
-Ensure the program maintains balance between strength, endurance, and flexibility to support overall fitness goals.
+    **Adaptation Requirements:**
+1. The exercises should be tailored to the fitness level of a ${fitnessLevel}, offering appropriate challenges without risk of overtraining.
+2. Consider the individual’s body dimensions, gender and weight in the selection of exercises and recommended weights.
 `;
 
-  const system = `
-  You are a professional fitness trainer creating personalized workout plans. Always respond with valid JSON that matches the provided schema.
-  
-  You understand and can work with the following schema for creating training programs:
 
-Equipment Types:
-Barbell, Dumbbell, Bodyweight, Resistance Band, Machine, Kettlebell, Medicine Ball, Cable Machine, Smith Machine, TRX, Exercise Ball, Foam Roller, Pull-Up Bar, Battle Ropes, Rowing Machine, Elliptical, Treadmill
-Exercise Categories:
-Strength, Cardio, Flexibility
-Exercise Names:
-Bench Press, Squat, Deadlift, Pull-Up, Push-Up, Overhead Press, Rowing, Bicep Curl, Tricep Extension, Leg Press, Lunge, Plank, Crunch, Leg Raise, Dumbbell Fly, Lat Pulldown, Russian Twist, Battle Rope Slams, Kettlebell Swing, Goblet Squat, Front Squat, Sumo Deadlift, Romanian Deadlift, Chest Press Machine, Seated Row, Cable Fly, Skull Crushers, Hammer Curl, Side Plank, Mountain Climbers, Burpees, Jumping Jacks, High Knees, Box Jump, Step-Up, Hip Thrust, Glute Bridge, Cable Tricep Pushdown, Leg Curl, Leg Extension
-Weight:
+    const system = `
+  You are a professional fitness trainer creating personalized workout plans.
 
-Amount: A number
-Unit: "kg"
+**Requirements:**
 
+1. **Split Focus:** Design a 3-day split workout, each focusing on different major muscle groups or combinations (e.g., Chest/Triceps, Back/Biceps, Legs/Shoulders). Ensure no significant overlap in targeted muscle groups on consecutive days to allow for optimal recovery.
+2. **Exercise Structure:** Each workout day should include 4 to 8 exercises. Specify the name of each exercise, the number of sets and repetitions, and the recommended weight (in kg), adapting to the individual's fitness level and goals.
+3. **Workout Day Details:** Provide a unique and descriptive name for each workout day that reflects the targeted muscle group(s). Include a brief description (2-3 sentences) summarizing the goals and key features of the workout, emphasizing the intended outcomes (e.g., strength, toning, endurance).
 
-Exercise:
+**Fitness Level Definitions with Training Experience:**
+1. **Beginner (0-3 months of training experience):** Little to no prior training experience. Exercises should focus on building foundational strength, proper form, and muscular endurance. Use lighter weights. Include more low-intensity exercises to prevent overtraining.
+2. **Intermediate (6-12 months of training experience):** Some training experience and a moderate level of fitness. Exercises should aim to increase strength, muscle tone, and stamina. Incorporate a mix of moderate weights. Include both compound and isolation movements, with moderate rest periods.
+3. **Advanced (12+ months of training experience):** Extensive training experience and a high level of fitness. Exercises should target hypertrophy, maximum strength, and muscle definition. Use heavier weights. Include complex movements for increased intensity.
 
-Name: One of the predefined exercise names
-Description: A brief explanation of the exercise
-Category: One of the predefined categories (Strength, Cardio, Flexibility)
-Muscle Groups: List of muscle groups targeted
-Muscle Group Count: Number of muscle groups targeted
-Equipment: List of equipment types needed
-Sets: Number of sets (default: 3)
-Reps: Number of repetitions (default: 8)
-Weight: Optional, can be null, includes amount and unit
+**Additional Notes:**
 
-
-Workout:
-
-Day: Number indicating the day of the workout
-Workout Name: Name of the workout
-Workout Description: Brief description of the workout
-Exercises: List of exercises following the Exercise schema
-
-
-Training Program:
-
-Workouts: List of workouts following the Workout schema
-
-
-When creating a training program, you should structure your response according to this schema. Each workout should have a day, name, description, and a list of exercises. For each exercise, provide all the required information including name, description, category, muscle groups, equipment, sets, reps, and weight (if applicable).
+- Include a mix of compound movements that engage multiple muscle groups and isolation exercises for targeted muscle development.
+- Ensure a balanced approach that supports strength, endurance, and flexibility.
+- Provide modifications or alternative exercises for varying fitness levels or equipment availability.
+- Consider the individual's preferences, limitations, and goals when designing the program.
+- Use clear and concise language to explain the purpose and benefits of each exercise.
+- Use only available equipment and exercises from the provided list. 
   `;
 
-  const { object } = await generateObject({
-    model: openai("gpt-4o-mini"),
-    schema: TrainingProgramSchema,
-    mode: "json",
-    schemaName: "Training Program",
-    schemaDescription: "A 3-day workout program for a user",
-    prompt,
-    system,
-  });
+    const {object} = await generateObject({
+        model: openai("gpt-4o-mini"),
+        schema: TrainingProgramSchema,
+        schemaName: "Personalized Training Program",
+        schemaDescription: "A personalized 3-day split training program",
+        prompt,
+        system,
+        mode: 'json',
+        maxRetries: 3,
+    });
 
-  return Response.json(object);
+    return Response.json(object);
 }

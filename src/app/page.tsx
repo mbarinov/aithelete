@@ -29,7 +29,7 @@ import {
   FitnessLevelStep,
 } from "@/components/FormSteps";
 
-export default function Component() {
+export default function RootPage() {
   const {
     step,
     formData,
@@ -84,6 +84,10 @@ export default function Component() {
                 Day {workout?.day}: {workout?.workoutName}
               </CardTitle>
               <CardDescription>{workout?.workoutDescription}</CardDescription>
+              <CardDescription>{workout?.duration} minutes</CardDescription>
+                <CardDescription>
+                    {workout?.caloriesBurned} calories burned
+                </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -117,6 +121,12 @@ export default function Component() {
                           {exercise.weight.unit}
                         </p>
                       )}
+                        {exercise?.assistWeight && (
+                            <p>
+                            <strong>Assist Weight:</strong>{" "}
+                            {exercise?.assistWeight.amount} {exercise.assistWeight.unit}
+                            </p>
+                        )}
                     </CardContent>
                   </Card>
                 ))}
@@ -209,8 +219,11 @@ export default function Component() {
                 <CardHeader>
                   <CardTitle className="flex items-center justify-center">
                     <Barbell className="mr-2" />
-                    Your AI-Generated Training Program
+                    {object?.metadata?.programName}
                   </CardTitle>
+                  <CardDescription className="text-center">
+                    {object?.metadata?.programDescription}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>{renderProgram()}</CardContent>
                 <CardFooter className="flex justify-center">

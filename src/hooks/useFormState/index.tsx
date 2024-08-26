@@ -5,7 +5,13 @@ const TOTAL_STEPS = 5;
 
 export const useFormState = () => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<FormData>({});
+  const [formData, setFormData] = useState<FormData>({
+    age: 22,
+    height: 160,
+    weight: 52,
+    sex: 'female',
+    fitnessLevel: 'beginner',
+  });
 
   const updateFormData = (field: FormField, value: FormData[FormField]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
