@@ -2,6 +2,8 @@ import {generateObject} from "ai";
 import { openai} from "@ai-sdk/openai";
 import {TrainingProgramSchema, ExerciseEnum, EquipmentEnum} from "@/lib/schema";
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
     const {age, sex, height, weight, fitnessLevel} = await req.json();
 
