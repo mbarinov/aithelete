@@ -70,17 +70,17 @@ const WeightSchema = z.object({
 });
 
 const ExerciseSchema = z.object({
-  // exerciseId: z.string().uuid(),
   name: ExerciseEnum,
   description: z.string(),
   category: CategoryEnum,
-  muscleGroups: z.array(z.string()),
+  muscleGroups: z.array(z.string()).optional(),
   muscleGroupCount: z.number(),
-  equipment: z.array(EquipmentEnum),
+  equipment: z.array(EquipmentEnum).optional(),
   sets: z.number().default(3),
-  reps: z.number().default(8),
+  reps: z.number().default(12),
   weight: WeightSchema.optional().nullable(),
   assistWeight: WeightSchema.optional().nullable(),
+  duration: z.number().optional(),
 });
 
 export const WorkoutSchema = z.object({
@@ -92,17 +92,22 @@ export const WorkoutSchema = z.object({
   caloriesBurned: z.number(),
 });
 
+export const MetadataSchema =z.object({
+  programName: z.string(),
+  programDescription: z.string(),
+  personalInfo: z.object({
+    age: z.number(),
+    weight: z.number(),
+    height: z.number(),
+    fitnessLevel: z.enum(["beginner", "intermediate", "advanced"]),
+    gender: z.enum(["male", "female", "other"]),
+  })
+});
+
 export const TrainingProgramSchema = z.object({
-  metadata: z.object({
-    programName: z.string(),
-    programDescription: z.string(),
-    personalInfo: z.object({
-        age: z.number(),
-        weight: z.number(),
-        height: z.number(),
-        fitnessLevel: z.enum(["beginner", "intermediate", "advanced"]),
-        gender: z.enum(["male", "female", "other"]),
-    })
-  }),
+  metadata: MetadataSchema,
   exercises: z.array(WorkoutSchema),
 });
+
+export type MetadataType = z.infer<typeof MetadataSchema>;
+export type WorkoutType = z.infer<typeof WorkoutSchema>;

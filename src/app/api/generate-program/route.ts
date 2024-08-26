@@ -11,38 +11,45 @@ export async function POST(req: Request) {
     const prompt = `
     Generate a personalized 3-day split training program for a ${age}-year-old ${sex}, ${height} cm tall, weighing ${weight} kg, at a ${fitnessLevel} fitness level. The program should be well-structured, targeting specific muscle groups each day to ensure balanced development and adequate recovery.
 
-**Available Exercises:** ${availableExercises}
-**Available Equipment:** ${availableEquipment}
-
     **Adaptation Requirements:**
 1. The exercises should be tailored to the fitness level of a ${fitnessLevel}, offering appropriate challenges without risk of overtraining.
 2. Consider the individual’s body dimensions, gender and weight in the selection of exercises and recommended weights.
+3. Ensure the program is using of the available equipment and exercises listed below, avoiding any not included in the provided list.
 `;
 
 
     const system = `
-  You are a professional fitness trainer creating personalized workout plans.
+You are a professional fitness trainer responsible for creating personalized workout plans.
 
-**Requirements:**
+Requirements:
 
-1. **Split Focus:** Design a 3-day split workout, each focusing on different major muscle groups or combinations (e.g., Chest/Triceps, Back/Biceps, Legs/Shoulders). Ensure no significant overlap in targeted muscle groups on consecutive days to allow for optimal recovery.
-2. **Exercise Structure:** Each workout day should include 4 to 8 exercises. Specify the name of each exercise, the number of sets and repetitions, and the recommended weight (in kg), adapting to the individual's fitness level and goals.
-3. **Workout Day Details:** Provide a unique and descriptive name for each workout day that reflects the targeted muscle group(s). Include a brief description (2-3 sentences) summarizing the goals and key features of the workout, emphasizing the intended outcomes (e.g., strength, toning, endurance).
+Split Focus: Design a 3-day split workout program, each day focusing on different major muscle groups or combinations (e.g., Chest/Triceps, Back/Biceps, Legs/Shoulders). Ensure no significant overlap in targeted muscle groups on consecutive days to allow for optimal recovery.
 
-**Fitness Level Definitions with Training Experience:**
-1. **Beginner (0-3 months of training experience):** Little to no prior training experience. Exercises should focus on building foundational strength, proper form, and muscular endurance. Use lighter weights. Include more low-intensity exercises to prevent overtraining.
-2. **Intermediate (6-12 months of training experience):** Some training experience and a moderate level of fitness. Exercises should aim to increase strength, muscle tone, and stamina. Incorporate a mix of moderate weights. Include both compound and isolation movements, with moderate rest periods.
-3. **Advanced (12+ months of training experience):** Extensive training experience and a high level of fitness. Exercises should target hypertrophy, maximum strength, and muscle definition. Use heavier weights. Include complex movements for increased intensity.
+Exercise Structure: Each workout day should include 4 to 8 exercises selected from the provided list. Specify:
 
-**Additional Notes:**
+The name of each exercise.
+The number of sets and repetitions.
+The recommended weight (in kg), adapted to the individual's fitness level and goals.
+Workout Day Details:
 
-- Include a mix of compound movements that engage multiple muscle groups and isolation exercises for targeted muscle development.
-- Ensure a balanced approach that supports strength, endurance, and flexibility.
-- Provide modifications or alternative exercises for varying fitness levels or equipment availability.
-- Consider the individual's preferences, limitations, and goals when designing the program.
-- Use clear and concise language to explain the purpose and benefits of each exercise.
-- Use only available equipment and exercises from the provided list. 
+Provide a unique and descriptive name for each workout day that reflects the targeted muscle group(s).
+Include a brief description (2-3 sentences) summarizing the goals and key features of the workout, emphasizing the intended outcomes (e.g., strength, toning, endurance).
+Available Exercises and Equipment: Use only the exercises and equipment listed below. Do NOT include any exercises or equipment not listed:
+
+Exercises: ${availableExercises}.
+
+Equipment: ${availableEquipment}.
+
+Fitness Level Definitions and Training Experience:
+
+Beginner (0-3 months): Focus on foundational strength, proper form, and muscular endurance. Use lighter weights and low-intensity exercises to prevent overtraining.
+Intermediate (6-12 months): Increase strength, muscle tone, and stamina. Use moderate weights with a mix of compound and isolation exercises, incorporating moderate rest periods.
+Advanced (12+ months): Focus on hypertrophy, maximum strength, and muscle definition. Use heavier weights with complex movements for increased intensity.
   `;
+
+    console.log(prompt);
+
+    console.log(system);
 
     const {object} = await generateObject({
         model: openai("gpt-4o-mini"),

@@ -65,6 +65,9 @@ dependencies:
   zod:
     specifier: ^3.23.8
     version: 3.23.8
+  zod-to-ts:
+    specifier: ^1.2.0
+    version: 1.2.0(typescript@5.5.4)(zod@3.23.8)
 
 devDependencies:
   '@types/node':
@@ -3923,6 +3926,16 @@ packages:
     peerDependencies:
       zod: ^3.22.4
     dependencies:
+      zod: 3.23.8
+    dev: false
+
+  /zod-to-ts@1.2.0(typescript@5.5.4)(zod@3.23.8):
+    resolution: {integrity: sha512-x30XE43V+InwGpvTySRNz9kB7qFU8DlyEy7BsSTCHPH1R0QasMmHWZDCzYm6bVXtj/9NNJAZF3jW8rzFvH5OFA==}
+    peerDependencies:
+      typescript: ^4.9.4 || ^5.0.2
+      zod: ^3
+    dependencies:
+      typescript: 5.5.4
       zod: 3.23.8
     dev: false
 
