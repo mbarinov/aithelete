@@ -81,7 +81,7 @@ export default function RootPage() {
             <div
                 className="max-w-2xl mx-auto p-4 flex items-center justify-center">
                 <AnimatePresence mode="wait">
-                    {!object ? (
+                    {!object && !isLoading ? (
                         <motion.div
                             key="form"
                             initial={{opacity: 0, y: 50}}

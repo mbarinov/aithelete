@@ -1,4 +1,4 @@
-import {generateObject} from "ai";
+import {generateObject, streamObject} from "ai";
 import { openai} from "@ai-sdk/openai";
 import {TrainingProgramSchema, ExerciseEnum, EquipmentEnum} from "@/lib/schema";
 
@@ -49,11 +49,7 @@ Intermediate (6-12 months): Increase strength, muscle tone, and stamina. Use mod
 Advanced (12+ months): Focus on hypertrophy, maximum strength, and muscle definition. Use heavier weights with complex movements for increased intensity.
   `;
 
-    console.log(prompt);
-
-    console.log(system);
-
-    const {object} = await generateObject({
+    const result = await streamObject({
         model: openai("gpt-4o-mini"),
         schema: TrainingProgramSchema,
         schemaName: "Personalized Training Program",
@@ -64,5 +60,5 @@ Advanced (12+ months): Focus on hypertrophy, maximum strength, and muscle defini
         maxRetries: 3,
     });
 
-    return Response.json(object);
+    return result.toTextStreamResponse();
 }
