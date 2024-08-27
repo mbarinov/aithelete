@@ -1,177 +1,174 @@
 "use client";
 
-import {Button} from "@/components/ui/button";
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-    CardContent,
-    CardFooter,
-} from "@/components/ui/card";
-import {Progress} from "@/components/ui/progress";
-import {motion, AnimatePresence} from "framer-motion";
-import {experimental_useObject as useObject} from "ai/react";
-import {
-    CaretRight,
-    CaretLeft,
-    Sparkle,
-} from "phosphor-react";
-import {MetadataType, TrainingProgramSchema, WorkoutType} from "@/lib/schema";
-import {useFormState} from "@/hooks/useFormState";
-import {
-    AgeStep,
-    SexStep,
-    HeightStep,
-    WeightStep,
-    FitnessLevelStep,
-} from "@/components/FormSteps";
-import {TrainingProgram} from "@/components/TrainingProgram";
+import { Button } from "@/components/ui/button";
+import { Brain, Barbell, Lightning, ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
-export default function RootPage() {
-    const {
-        step,
-        formData,
-        updateFormData,
-        nextStep,
-        prevStep,
-        TOTAL_STEPS,
-    } = useFormState();
+export default function Home() {
+    return (
+        <>
+            <HeroSection />
+            <FeaturesSection />
+            <HowItWorksSection />
+            <CTASection />
+        </>
+    );
+}
 
-    const {submit, object, isLoading, error} = useObject({
-        api: "/api/generate-program",
-        schema: TrainingProgramSchema,
-    });
+function HeroSection() {
+    return (
+        <section className="px-4 py-20 text-center relative bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <motion.h1
+                className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+            >
+                Your AI Personal Trainer 🏋️‍♂️🤖
+            </motion.h1>
 
-    const metadata = object?.metadata as MetadataType;
-    const exercises = object?.exercises as WorkoutType[];
+            <motion.p
+                className="text-xl md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+            >
+                Personalized split training programs that are smart, effective, and tailored just for you!
+            </motion.p>
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+            >
+                <Button asChild size="lg" className="text-lg px-8 py-6 bg-white text-primary hover:bg-gray-200">
+                    <Link href="/signup">
+                        Start Your Fitness Journey
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                </Button>
+            </motion.div>
+        </section>
+    );
+}
 
-    const generateProgram = async () => {
-        submit(formData);
-    };
-
-    const renderFormStep = () => {
-        const steps: JSX.Element[] = [
-            <AgeStep key="age" formData={formData}
-                     updateFormData={updateFormData}/>,
-            <SexStep key="sex" formData={formData}
-                     updateFormData={updateFormData}/>,
-            <HeightStep
-                key="height"
-                formData={formData}
-                updateFormData={updateFormData}
-            />,
-            <WeightStep
-                key="weight"
-                formData={formData}
-                updateFormData={updateFormData}
-            />,
-            <FitnessLevelStep
-                key="fitness"
-                formData={formData}
-                updateFormData={updateFormData}
-            />,
-        ];
-        return steps[step - 1];
-    };
+function FeaturesSection() {
+    const features = [
+        {
+            icon: Brain,
+            title: "AI-Powered Personalization",
+            description: "Our AI crafts the perfect workout plan based on your unique profile."
+        },
+        {
+            icon: Barbell,
+            title: "Adaptive Training",
+            description: "Programs that evolve with you, ensuring continuous progress."
+        },
+        {
+            icon: Lightning,
+            title: "Efficiency Boost",
+            description: "Achieve your fitness goals faster with optimized workout plans."
+        }
+    ];
 
     return (
-        <div
-            className="bg-gradient-to-br from-purple-100 to-blue-100 min-h-screen flex items-center justify-center">
-            <div
-                className="max-w-2xl mx-auto p-4 flex items-center justify-center">
-                <AnimatePresence mode="wait">
-                    {!object && !isLoading ? (
-                        <motion.div
-                            key="form"
-                            initial={{opacity: 0, y: 50}}
-                            animate={{opacity: 1, y: 0}}
-                            exit={{opacity: 0, y: -50}}
-                            transition={{duration: 0.5}}
-                            className="w-full"
-                        >
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle
-                                        className="text-2xl font-bold text-center">
-                                        🏋️‍♀️ AIthelete 🏃‍♂️
-                                    </CardTitle>
-                                    <CardDescription className="text-center">
-                                        Create your personalized AI-powered
-                                        training program in just
-                                        a few steps!
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <Progress
-                                        value={(step / TOTAL_STEPS) * 100}
-                                        className="mb-4"
-                                    />
-                                    <AnimatePresence mode="wait">
-                                        <motion.div
-                                            key={step}
-                                            initial={{opacity: 0, x: 50}}
-                                            animate={{opacity: 1, x: 0}}
-                                            exit={{opacity: 0, x: -50}}
-                                            transition={{duration: 0.3}}
-                                        >
-                                            {renderFormStep()}
-                                        </motion.div>
-                                    </AnimatePresence>
-                                </CardContent>
-                                <CardFooter className="flex justify-between">
-                                    {step > 1 && (
-                                        <Button onClick={prevStep}
-                                                variant="outline">
-                                            <CaretLeft
-                                                className="mr-2 h-4 w-4"/> Back
-                                        </Button>
-                                    )}
-                                    <div
-                                        className={step === 1 ? "ml-auto" : ""}>
-                                        <Button
-                                            onClick={
-                                                step === TOTAL_STEPS ? generateProgram : nextStep
-                                            }
-                                            disabled={isLoading}
-                                        >
-                                            {step < TOTAL_STEPS ? (
-                                                <>
-                                                    Next <CaretRight
-                                                    className="ml-2 h-4 w-4"/>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    {isLoading ? "Generating..." : "Generate"}{" "}
-                                                    <Sparkle
-                                                        className="ml-2 h-4 w-4"/>
-                                                </>
-                                            )}
-                                        </Button>
-                                    </div>
-                                </CardFooter>
-                            </Card>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="program"
-                            initial={{opacity: 0, y: 50}}
-                            animate={{opacity: 1, y: 0}}
-                            exit={{opacity: 0, y: -50}}
-                            transition={{duration: 0.5}}
-                            className="w-full"
-                        >
-                            <TrainingProgram metadata={metadata} exercises={exercises} />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-                {!!error && (
-                    <div className="text-red-500 mt-4 text-center">
-                        An error occurred while generating your program. Please
-                        try again.
-                    </div>
-                )}
+        <section id="features" className="container mx-auto px-4 py-20 relative">
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <motion.h2
+                className="text-3xl md:text-4xl font-bold text-center mb-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
+            >
+                Why Choose AIthelete? 🚀
+            </motion.h2>
+            <div className="grid md:grid-cols-3 gap-8">
+                {features.map((feature, index) => (
+                    <FeatureCard key={index} {...feature} />
+                ))}
             </div>
-        </div>
+        </section>
+    );
+}
+
+interface FeatureCardProps {
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    title: string;
+    description: string;
+}
+
+function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
+    return (
+        <motion.div
+            className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+        >
+            <Icon className="h-12 w-12 text-primary mb-4" />
+            <h3 className="text-xl font-semibold mb-2">{title}</h3>
+            <p className="text-gray-700 dark:text-gray-300">{description}</p>
+        </motion.div>
+    );
+}
+
+function HowItWorksSection() {
+    const steps = [
+        "Sign up and create your profile with age, fitness level, height, and weight.",
+        "Our AI analyzes your data and generates a personalized training program.",
+        "Follow your custom workouts and track your progress in the app.",
+    ];
+
+    return (
+        <section id="how-it-works" className="container mx-auto px-4 py-20 relative">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">How It Works 💡</h2>
+            <div className="max-w-3xl mx-auto space-y-8">
+                {steps.map((step, index) => (
+                    <div key={index} className="flex items-center space-x-4 bg-white/60 dark:bg-gray-800/60 p-4 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+                        <div className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                            {index + 1}
+                        </div>
+                        <p className="text-lg text-gray-800 dark:text-gray-200">{step}</p>
+                    </div>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+function CTASection() {
+    return (
+        <section className="px-4 py-20 text-center relative bg-gradient-to-r from-green-400 to-blue-500 text-white">
+            <div className="absolute inset-0 -z-10 bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%222%22 cy=%222%22 r=%222%22 fill=%22%23e5e7eb%22/%3E%3C/svg%3E')] dark:bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20%22%3E%3Ccircle cx=%222%22 cy=%222%22 r=%222%22 fill=%22%2333343d%22/%3E%3C/svg%3E')]"></div>
+            <motion.h2
+                className="text-3xl md:text-4xl font-bold mb-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
+            >
+                Ready to Transform Your Fitness Journey? 🚀
+            </motion.h2>
+            <motion.p
+                className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+            >
+                Join AIthelete today and experience the power of AI-driven personalized training.
+            </motion.p>
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+            >
+                <Button asChild size="lg" className="text-lg px-8 py-6 bg-white text-primary hover:bg-gray-200">
+                    <Link href="/signup">
+                        Get Started Now
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                </Button>
+            </motion.div>
+        </section>
     );
 }
