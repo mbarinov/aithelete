@@ -2,18 +2,22 @@ import type {Metadata} from "next";
 import Link from "next/link"
 import {Brain} from '@phosphor-icons/react/dist/ssr';
 import {Header} from "@/components/Header";
+import {auth} from "@/auth";
 import "./globals.css"
+import {logout} from "@/app/actions";
 
 export const metadata: Metadata = {
     title: 'AIthelete - Your AI Personal Trainer',
     description: 'Personalized split training programs that are smart, effective, and tailored just for you!',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
                                        children,
                                    }: {
     children: React.ReactNode
 }) {
+    const session = await auth();
+
     return (
         <html lang="en">
         <head>
@@ -24,7 +28,7 @@ export default function RootLayout({
         </head>
         <body
             className="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-        <Header />
+        <Header isAuthorized={!!session} onLogout={logout} user={session?.user} />
         <main className="flex-grow">{children}</main>
         <Footer/>
         </body>
