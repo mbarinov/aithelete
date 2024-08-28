@@ -21,24 +21,37 @@ export function Header({isAuthorized, user, onLogout}: HeaderProps) {
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) {
-            setIsDarkMode(savedTheme === "dark");
-        }
-    }, []);
+        const savedTheme = sessionStorage.getItem("theme");
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-    useEffect(() => {
-        if (isDarkMode) {
-            document.documentElement.classList.add("dark");
-            localStorage.setItem("theme", "dark");
+        const applyTheme = (isDark: boolean) => {
+            setIsDarkMode(isDark);
+            document.documentElement.classList.toggle("dark", isDark);
+            sessionStorage.setItem("theme", isDark ? "dark" : "light");
+        };
+
+        if (savedTheme) {
+            applyTheme(savedTheme === "dark");
         } else {
-            document.documentElement.classList.remove("dark");
-            localStorage.setItem("theme", "light");
+            applyTheme(darkModeMediaQuery.matches);
         }
+
+        const handleDarkModeChange = (event: MediaQueryListEvent) => {
+            applyTheme(event.matches);
+        };
+
+        darkModeMediaQuery.addEventListener('change', handleDarkModeChange);
+
+        return () => {
+            darkModeMediaQuery.removeEventListener('change', handleDarkModeChange);
+        };
     }, [isDarkMode]);
 
     const toggleDarkMode = () => {
-        setIsDarkMode(!isDarkMode);
+        const newIsDarkMode = !isDarkMode;
+        setIsDarkMode(newIsDarkMode);
+        document.documentElement.classList.toggle("dark", newIsDarkMode);
+        sessionStorage.setItem("theme", newIsDarkMode ? "dark" : "light");
     };
 
     return (
