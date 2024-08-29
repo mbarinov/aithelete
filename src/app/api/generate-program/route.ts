@@ -135,6 +135,27 @@ Advanced (12+ months): Focus on hypertrophy, maximum strength, and muscle defini
                     },
                 },
             });
+
+            await prisma.userProfile.upsert({
+                where: {
+                    userId: user.id,
+                },
+                update: {
+                    age: object.metadata.personalInfo.age,
+                    weight: object.metadata.personalInfo.weight,
+                    height: object.metadata.personalInfo.height,
+                    gender: object.metadata.personalInfo.gender,
+                    fitnessLevel: object.metadata.personalInfo.fitnessLevel,
+                },
+                create: {
+                    userId: user.id,
+                    age: object.metadata.personalInfo.age,
+                    weight: object.metadata.personalInfo.weight,
+                    height: object.metadata.personalInfo.height,
+                    gender: object.metadata.personalInfo.gender,
+                    fitnessLevel: object.metadata.personalInfo.fitnessLevel,
+                }
+            });
         },
     });
 
