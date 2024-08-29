@@ -8,16 +8,20 @@ generator client {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  email         String          @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id              String           @id @default(cuid())
+  name            String?
+  email           String           @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  trainingProgram TrainingProgram?
+  profile         UserProfile?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([email])
 }
 
 model Account {
@@ -39,6 +43,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -49,6 +54,8 @@ model Session {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -57,4 +64,85 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model UserProfile {
+  id           String       @id @default(cuid())
+  age          Int
+  weight       Float
+  height       Float
+  fitnessLevel FitnessLevel
+  gender       Gender
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String       @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model TrainingProgram {
+  id                 String    @id @default(cuid())
+  programName        String
+  programDescription String
+  exercises          Workout[]
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String    @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Workout {
+  id                 String          @id @default(cuid())
+  day                Int
+  workoutName        String
+  workoutDescription String
+  duration           Int
+  caloriesBurned     Int
+  trainingProgram    TrainingProgram @relation(fields: [trainingProgramId], references: [id], onDelete: Cascade)
+  trainingProgramId  String
+  exercises          Exercise[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([trainingProgramId])
+}
+
+model Exercise {
+  id                 String  @id @default(cuid())
+  name               String
+  description        String
+  category           String
+  muscleGroupCount   Int
+  sets               Int     @default(3)
+  reps               Int     @default(12)
+  weightAmount       Float?
+  weightUnit         String?
+  assistWeightAmount Float?
+  assistWeightUnit   String?
+  duration           Int?
+  workout            Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  workoutId          String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([workoutId])
+}
+
+enum FitnessLevel {
+  beginner
+  intermediate
+  advanced
+}
+
+enum Gender {
+  male
+  female
+  other
 }

@@ -1,10 +1,20 @@
-import {generateObject, streamObject} from "ai";
-import { openai} from "@ai-sdk/openai";
-import {TrainingProgramSchema, ExerciseEnum, EquipmentEnum} from "@/lib/schema";
+import {streamObject} from "ai";
+import {openai} from "@ai-sdk/openai";
+import {auth} from "@/auth"
+import {TrainingProgramSchema, ExerciseEnum, EquipmentEnum} from "@/lib/schema"
+import prisma from "@/prisma";
 
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
+    const session = await auth();
+
+    if (!session) {
+        return new Response("Unauthorized", {status: 401});
+    }
+
+    console.log('Session:', session);
+
     const {age, sex, height, weight, fitnessLevel} = await req.json();
 
     const availableExercises = ExerciseEnum.options.join(", ");
@@ -58,6 +68,74 @@ Advanced (12+ months): Focus on hypertrophy, maximum strength, and muscle defini
         system,
         mode: 'json',
         maxRetries: 3,
+        async onFinish({object, error}) {
+            if (object === undefined) {
+                console.error('Error:', error);
+                return;
+            }
+
+
+            if (!session.user?.email) {
+                throw new Error("User not found");
+            }
+
+            const user = await prisma.user.findUnique({
+                where: {
+                    email: session.user.email,
+                }
+            });
+
+            if (!user) {
+                throw new Error("User not found");
+            }
+
+            const {metadata, exercises} = object;
+
+            const exerciseData = exercises.map(workout => ({
+                day: workout.day,
+                workoutName: workout.workoutName,
+                workoutDescription: workout.workoutDescription,
+                duration: workout.duration,
+                caloriesBurned: workout.caloriesBurned,
+                exercises: {
+                    create: workout.workout.map(exercise => ({
+                        name: exercise.name,
+                        description: exercise.description,
+                        category: exercise.category,
+                        muscleGroupCount: exercise.muscleGroupCount,
+                        sets: exercise.sets,
+                        reps: exercise.reps,
+                        weightAmount: exercise.weight ? exercise.weight.amount : null,
+                        weightUnit: exercise.weight ? exercise.weight.unit : null,
+                        duration: exercise.duration || null,
+                    })),
+                },
+            }))
+
+            await prisma.trainingProgram.upsert({
+                where: {
+                    userId: user.id,
+                },
+                update: {
+                    programName: metadata.programName,
+                    programDescription: metadata.programDescription,
+                    exercises: {
+                        deleteMany: {}, // Clear existing workouts and exercises first
+                        create: exerciseData,
+                    },
+                },
+                create: {
+                    programName: metadata.programName,
+                    programDescription: metadata.programDescription,
+                    user: {
+                        connect: {id: user.id},
+                    },
+                    exercises: {
+                        create: exerciseData,
+                    },
+                },
+            });
+        },
     });
 
     return result.toTextStreamResponse();
