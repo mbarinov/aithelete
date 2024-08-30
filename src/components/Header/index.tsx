@@ -172,13 +172,13 @@ export function Header({isAuthorized, user, onLogout}: HeaderProps) {
             </div>
             {mobileMenuOpen && (
                 <div className="md:hidden" id="mobile-menu">
-                    <div className="space-y-1 pb-3 pt-2">
+                    <div className="space-y-4 pb-3 pt-2 flex-col flex ml-10">
                         {isAuthorized ? authorizedMenuItems : guestMenuItems}
                         <Button
                             variant="ghost"
                             size="sm"
                             aria-label="Toggle theme"
-                            className="w-full justify-start rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
+                            className="w-full justify-start rounded-md px-3 text-base font-medium text-foreground hover:bg-accent hover:text-accent-foreground"
                             onClick={toggleDarkMode}
                         >
                             {isDarkMode ? (
