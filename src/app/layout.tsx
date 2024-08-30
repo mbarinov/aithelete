@@ -5,6 +5,7 @@ import {Header} from "@/components/Header";
 import {auth} from "@/auth";
 import "./globals.css"
 import {logout} from "@/app/actions";
+import { cn} from "@/lib/utils";
 
 export const metadata: Metadata = {
     title: 'AIthelete - Your AI Personal Trainer',
@@ -36,10 +37,14 @@ export default async function RootLayout({
     )
 }
 
-function Footer() {
+async function Footer() {
+    const session = await auth();
+
     return (
         <footer
-            className="bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm py-8 relative">
+            className={cn("bg-gray-100/80 dark:bg-gray-800/80" +
+                " backdrop-blur-sm py-8 relative", !!session && 'hidden' +
+                ' md:visible')}>
             <div
                 className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
             <div
