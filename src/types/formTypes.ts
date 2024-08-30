@@ -1,6 +1,6 @@
 export interface FormData {
   age?: number;
-  sex?: "male" | "female" | "other";
+  gender?: "male" | "female" | "other";
   height?: number;
   weight?: number;
   fitnessLevel?: "beginner" | "intermediate" | "advanced";

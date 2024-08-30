@@ -9,7 +9,7 @@ export const useFormState = () => {
     age: 22,
     height: 160,
     weight: 52,
-    sex: 'female',
+    gender: 'female',
     fitnessLevel: 'beginner',
   });
 

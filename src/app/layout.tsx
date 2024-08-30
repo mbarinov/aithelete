@@ -3,9 +3,12 @@ import Link from "next/link"
 import {Brain} from '@phosphor-icons/react/dist/ssr';
 import {Header} from "@/components/Header";
 import {auth} from "@/auth";
-import "./globals.css"
 import {logout} from "@/app/actions";
-import { cn} from "@/lib/utils";
+import {cn} from "@/lib/utils";
+import {Theme} from '@radix-ui/themes';
+import '@radix-ui/themes/styles.css';
+
+import "./globals.css"
 
 export const metadata: Metadata = {
     title: 'AIthelete - Your AI Personal Trainer',
@@ -13,8 +16,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({
-                                       children,
-                                   }: {
+                                             children,
+                                         }: {
     children: React.ReactNode
 }) {
     const session = await auth();
@@ -29,9 +32,12 @@ export default async function RootLayout({
         </head>
         <body
             className="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-        <Header isAuthorized={!!session} onLogout={logout} user={session?.user} />
-        <main className="flex-grow">{children}</main>
-        <Footer/>
+        <Theme>
+            <Header isAuthorized={!!session} onLogout={logout}
+                    user={session?.user}/>
+            <main className="flex-grow">{children}</main>
+            <Footer/>
+        </Theme>
         </body>
         </html>
     )
@@ -50,17 +56,21 @@ async function Footer() {
             <div
                 className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
                 <div className="flex items-center space-x-2 mb-4 md:mb-0">
-                    <Brain className="h-6 w-6 text-primary dark:text-white" />
-                    <span className="text-xl font-bold text-primary dark:text-white">AIthelete</span>
+                    <Brain className="h-6 w-6 text-primary dark:text-white"/>
+                    <span
+                        className="text-xl font-bold text-primary dark:text-white">AIthelete</span>
                 </div>
                 <nav className="flex space-x-4">
-                    <Link href="/privacy" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
+                    <Link href="/privacy"
+                          className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
                         Privacy Policy
                     </Link>
-                    <Link href="/terms" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
+                    <Link href="/terms"
+                          className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
                         Terms of Service
                     </Link>
-                    <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
+                    <Link href="/contact"
+                          className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
                         Contact Us
                     </Link>
                 </nav>
