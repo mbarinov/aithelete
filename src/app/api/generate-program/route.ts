@@ -25,6 +25,8 @@ export async function POST(req: Request) {
 1. The exercises should be tailored to the fitness level of a ${fitnessLevel}, offering appropriate challenges without risk of overtraining.
 2. Consider the individual’s body dimensions, gender and weight in the selection of exercises and recommended weights.
 3. Ensure the program is using of the available equipment and exercises listed below, avoiding any not included in the provided list.
+Exercises: ${availableExercises}.
+Equipment: ${availableEquipment}.
 `;
 
 
@@ -44,10 +46,9 @@ Workout Day Details:
 
 Provide a unique and descriptive name for each workout day that reflects the targeted muscle group(s).
 Include a brief description (2-3 sentences) summarizing the goals and key features of the workout, emphasizing the intended outcomes (e.g., strength, toning, endurance).
+
 Available Exercises and Equipment: Use only the exercises and equipment listed below. Do NOT include any exercises or equipment not listed:
-
 Exercises: ${availableExercises}.
-
 Equipment: ${availableEquipment}.
 
 Fitness Level Definitions and Training Experience:
