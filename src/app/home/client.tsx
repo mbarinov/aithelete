@@ -43,7 +43,7 @@ export function HomeClient({
                            }: HomeClientProps) {
     return (
         <div className="flex flex-col min-h-screen bg-background">
-            <header className="sticky top-[57px] z-10 bg-background border-b">
+            <header className="sticky top-[57px] z-10 bg-background">
                 <div
                     className="container flex justify-between items-center py-4">
                     <h1 className="text-xl font-bold">{trainingProgram.programName}</h1>

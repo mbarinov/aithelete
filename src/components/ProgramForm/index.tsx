@@ -17,6 +17,10 @@ import {TrainingProgram} from "@/components/TrainingProgram";
 import type {
     FormData
 } from "@/types/formTypes";
+import {
+    Barbell
+} from '@phosphor-icons/react/dist/ssr';
+import {useRouter} from 'next/navigation'
 
 interface ProgramFormProps {
     children?: React.ReactNode;
@@ -39,6 +43,8 @@ export function ProgramForm({userProfile, children}: ProgramFormProps) {
         api: "/api/generate-program",
         schema: TrainingProgramSchema,
     });
+
+    const router = useRouter();
 
     const metadata = object?.metadata as MetadataType;
     const exercises = object?.exercises as WorkoutType[];
@@ -137,16 +143,44 @@ export function ProgramForm({userProfile, children}: ProgramFormProps) {
                             transition={{duration: 0.5}}
                             className="w-full"
                         >
-                            <TrainingProgram metadata={metadata}
-                                             exercises={exercises}/>
+                            {isLoading && (
+                                <Card>
+                                    <div className="p-4">
+                                        {children}
+                                    </div>
+                                    <div
+                                        className="p-4 flex justify-center items-center space-x-2">
+                                        <Barbell
+                                            className="w-6 h-6 animate-bounce"/>
+                                        <p className="text-muted-foreground">Crafting
+                                            your
+                                            perfect workout...</p>
+                                    </div>
+                                </Card>
+                            )}
+                            {isLoading === false && (
+                                <TrainingProgram metadata={metadata}
+                                                 exercises={exercises}
+                                                 onEdit={() => {
+                                                     router.refresh();
+                                                 }}
+                                />
+                            )}
                         </motion.div>
                     )}
                 </AnimatePresence>
                 {!!error && (
-                    <div className="text-red-500 mt-4 text-center">
-                        An error occurred while generating your program. Please
-                        try again.
-                    </div>
+                    <Card>
+                        <div className="p-4">
+                            {children}
+                        </div>
+
+                        <div className="p-4 text-red-500 mt-4 text-center">
+                            An error occurred while generating your program.
+                            Please
+                            try again.
+                        </div>
+                    </Card>
                 )}
             </div>
         </div>

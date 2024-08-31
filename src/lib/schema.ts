@@ -111,4 +111,5 @@ export const TrainingProgramSchema = z.object({
 
 export type MetadataType = z.infer<typeof MetadataSchema>;
 export type WorkoutType = z.infer<typeof WorkoutSchema>;
+export type ExerciseType = z.infer<typeof ExerciseSchema>;
 export type TrainingProgramType = z.infer<typeof TrainingProgramSchema>;

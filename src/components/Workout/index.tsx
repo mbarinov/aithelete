@@ -1,77 +1,42 @@
 import React from "react";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
-} from "@/components/ui/card";
-import type {WorkoutType} from "@/lib/schema";
+import type { WorkoutType, ExerciseType } from "@/lib/schema";
 
 interface WorkoutProps {
-    workout: WorkoutType
+    workout: WorkoutType;
 }
 
-export function Workout({workout}: WorkoutProps) {
-    if(!workout) return null;
+export function Workout({ workout }: WorkoutProps) {
+    if (!workout) return null;
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>
-                    Day {workout?.day}: {workout?.workoutName}
-                </CardTitle>
-                <CardDescription>{workout?.workoutDescription}</CardDescription>
-                <CardDescription>{workout?.duration} minutes</CardDescription>
-                <CardDescription>{workout?.caloriesBurned} calories
-                    burned</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-4">
-                    {workout?.workout?.map((exercise) => (
-                        <Card key={exercise?.name}>
-                            <CardHeader>
-                                <CardTitle>{exercise?.name}</CardTitle>
-                                <CardDescription>{exercise?.description}</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <p>
-                                    <strong>Category:</strong> {exercise?.category}
-                                </p>
-                                <p>
-                                    <strong>Muscle
-                                        Groups:</strong> {exercise?.muscleGroups?.join(", ")}
-                                </p>
-                                <p>
-                                    <strong>Equipment:</strong> {exercise?.equipment?.join(", ")}
-                                </p>
-                                <p>
-                                    <strong>Sets:</strong> {exercise?.sets}
-                                </p>
-                                <p>
-                                    <strong>Reps:</strong> {exercise?.reps}
-                                </p>
-                                {exercise?.weight && (
-                                    <p>
-                                        <strong>Weight:</strong> {exercise?.weight.amount} {exercise.weight.unit}
-                                    </p>
-                                )}
-                                {exercise?.assistWeight && (
-                                    <p>
-                                        <strong>Assist
-                                            Weight:</strong> {exercise?.assistWeight.amount} {exercise.assistWeight.unit}
-                                    </p>
-                                )}
-                                {exercise?.duration && (
-                                    <p>
-                                        <strong>Duration:</strong> {exercise?.duration} minutes
-                                    </p>
-                                )}
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
-    )
+        <div className="w-full max-w-md mx-auto p-2 sm:p-4 md:p-6">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold">
+                Day {workout.day}: {workout.workoutName}
+            </div>
+            <div className="space-y-2 mt-4">
+                {workout.workout.map((exercise) => (
+                    <ExerciseCard key={exercise.name} exercise={exercise} />
+                ))}
+            </div>
+        </div>
+    );
 }
+
+interface ExerciseCardProps {
+    exercise: ExerciseType;
+}
+
+const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise }) => {
+    return (
+        <div className="p-1 sm:p-2 md:p-3 flex justify-between">
+            <div className="text-base sm:text-lg md:text-xl font-bold">
+                {exercise.name}
+            </div>
+            <div className="space-y-1">
+                <span className="text-sm text-muted-foreground">
+                    {exercise.sets} x {exercise.reps} {exercise.weight && `@ ${exercise.weight.amount}${exercise.weight.unit}`}
+                </span>
+            </div>
+        </div>
+    );
+};
