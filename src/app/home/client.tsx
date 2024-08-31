@@ -1,11 +1,11 @@
 "use client";
 
-import {AwaitedReactNode, JSXElementConstructor,
+import {
+    AwaitedReactNode, JSXElementConstructor,
     Key,
     ReactElement,
     ReactNode,
     ReactPortal,
-    useState
 } from 'react'
 import {Button} from "@/components/ui/button"
 import {Card, CardContent} from "@/components/ui/card"
@@ -21,7 +21,6 @@ import {
     MoreVertical,
     Share2,
     RefreshCw,
-    Home,
     Dumbbell,
     Clock
 } from 'lucide-react'
@@ -32,7 +31,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Image from 'next/image'
-import {Footer } from "@/components/Footer"
+import Link from 'next/link'
+import {Footer} from "@/components/Footer"
 
 interface HomeClientProps {
     trainingProgram: any
@@ -41,21 +41,12 @@ interface HomeClientProps {
 export function HomeClient({
                                trainingProgram
                            }: HomeClientProps) {
-    const [activeDay, setActiveDay] = useState(0)
-
-    const handleRegenerate = () => {
-        console.log("Regenerating program...")
-    }
-
-    const handleShare = () => {
-        console.log("Sharing program...")
-    }
     return (
         <div className="flex flex-col min-h-screen bg-background">
-            <header className="sticky top-0 z-10 bg-background border-b">
+            <header className="sticky top-[57px] z-10 bg-background border-b">
                 <div
                     className="container flex justify-between items-center py-4">
-                    <h1 className="text-2xl font-bold">{trainingProgram.programName}</h1>
+                    <h1 className="text-xl font-bold">{trainingProgram.programName}</h1>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon">
@@ -63,14 +54,19 @@ export function HomeClient({
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={handleRegenerate}>
-                                <RefreshCw className="mr-2 h-4 w-4"/>
-                                Re-generate Program
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleShare}>
-                                <Share2 className="mr-2 h-4 w-4"/>
-                                Share Program
-                            </DropdownMenuItem>
+                            <Link href="/edit">
+                                <DropdownMenuItem>
+
+                                    <RefreshCw className="mr-2 h-4 w-4"/>
+                                    Re-generate Program
+                                </DropdownMenuItem>
+                            </Link>
+                            <Link href="/share">
+                                <DropdownMenuItem>
+                                    <Share2 className="mr-2 h-4 w-4"/>
+                                    Share Program
+                                </DropdownMenuItem>
+                            </Link>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
@@ -85,7 +81,6 @@ export function HomeClient({
                             <TabsTrigger
                                 key={workout.id}
                                 value={index.toString()}
-                                onClick={() => setActiveDay(index)}
                             >
                                 Day {index + 1}
                             </TabsTrigger>
@@ -133,18 +128,19 @@ export function HomeClient({
                                                             </div>
                                                         </AccordionTrigger>
                                                         <AccordionContent>
-                                                            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                                                             <div
-                                                                className="space-y-4">
-                                                                <Image
-                                                                    src="https://picsum.photos/300/200"
-                                                                    alt={`${exercise.name} illustration`}
-                                                                    width={300}
-                                                                    height={200}
-                                                                    className="h-48 object-cover rounded-md"
-                                                                />
-                                                                <p>{exercise.description}</p>
-                                                            </div>
+                                                                className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                                                                <div
+                                                                    className="space-y-4">
+                                                                    <Image
+                                                                        src="https://picsum.photos/300/200"
+                                                                        alt={`${exercise.name} illustration`}
+                                                                        width={300}
+                                                                        height={200}
+                                                                        className="h-48 object-cover rounded-md"
+                                                                    />
+                                                                    <p>{exercise.description}</p>
+                                                                </div>
                                                                 <div
                                                                     className="grid grid-cols-2 lg:grid-cols-1 gap-2 text-sm">
                                                                     <div>
@@ -194,7 +190,7 @@ export function HomeClient({
                 </Tabs>
             </main>
 
-            <Footer />
+            <Footer/>
         </div>
     )
 }
