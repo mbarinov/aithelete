@@ -3,15 +3,13 @@ import { FormData, FormField } from "@/types/formTypes";
 
 const TOTAL_STEPS = 5;
 
-export const useFormState = () => {
+export const useFormState = ({
+                               initialData = {},
+                             }: {
+  initialData?: FormData;
+} = {}) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<FormData>({
-    age: 22,
-    height: 160,
-    weight: 52,
-    gender: 'female',
-    fitnessLevel: 'beginner',
-  });
+  const [formData, setFormData] = useState<FormData>(initialData);
 
   const updateFormData = (field: FormField, value: FormData[FormField]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

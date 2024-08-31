@@ -1,8 +1,8 @@
 import type {Metadata} from 'next';
-import { redirect } from 'next/navigation';
+import {redirect} from 'next/navigation';
 import {auth} from "@/auth";
 import prisma from "@/prisma";
-import {CreateForm} from './form';
+import {ProgramForm} from '@/components/ProgramForm';
 
 export const metadata: Metadata = {
     title: "Create a Program  | AIthelete",
@@ -20,7 +20,7 @@ export default async function CreatePage() {
         where: {
             email: session.user.email
         },
-        select:{
+        select: {
             id: true,
             email: true,
             name: true,
@@ -34,13 +34,21 @@ export default async function CreatePage() {
                     gender: true,
                 }
             },
-            trainingProgram:true,
+            trainingProgram: true,
         }
     });
 
-    if(payload?.trainingProgram) {
+    if (payload?.trainingProgram) {
         redirect("/home");
     }
 
-    return <CreateForm/>;
+    return <ProgramForm>
+        <h2 className="text-2xl font-bold text-center">
+            🏋️‍♀️ AIthelete 🏃‍♂️
+        </h2>
+        <p className="text-center">
+            Create your personalized AI-powered
+            training program in just a few steps!
+        </p>
+    </ProgramForm>;
 }

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Brain, Barbell, Lightning, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+import { auth } from "@/auth";
 
 export default function Home() {
     return (
@@ -13,7 +14,9 @@ export default function Home() {
     );
 }
 
-function HeroSection() {
+async function HeroSection() {
+    const session = await auth();
+
     return (
         <section className="px-4 py-20 text-center relative bg-gradient-to-r from-blue-500 to-purple-600 text-white">
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:16px_16px]"></div>
@@ -25,7 +28,7 @@ function HeroSection() {
             </p>
             <div>
                 <Button asChild size="lg" className="text-lg px-8 py-6 bg-white text-primary hover:bg-gray-200">
-                    <Link href="/login">
+                    <Link href={!!session ?"/home":"/login"}>
                         Start Your Fitness Journey
                         <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>

@@ -5,7 +5,6 @@ import {AwaitedReactNode, JSXElementConstructor,
     ReactElement,
     ReactNode,
     ReactPortal,
-    SetStateAction,
     useState
 } from 'react'
 import {Button} from "@/components/ui/button"
@@ -33,6 +32,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Image from 'next/image'
+import {Footer } from "@/components/Footer"
 
 interface HomeClientProps {
     trainingProgram: any
@@ -194,21 +194,7 @@ export function HomeClient({
                 </Tabs>
             </main>
 
-            <footer
-                className="sticky bottom-0 bg-background border-t md:hidden">
-                <nav className="container flex justify-around py-2">
-                    <Button variant="ghost" size="icon">
-                        <Home className="h-5 w-5"/>
-                    </Button>
-                    <Button variant="ghost" size="icon"
-                            onClick={handleRegenerate}>
-                        <RefreshCw className="h-5 w-5"/>
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={handleShare}>
-                        <Share2 className="h-5 w-5"/>
-                    </Button>
-                </nav>
-            </footer>
+            <Footer />
         </div>
     )
 }

@@ -13,15 +13,13 @@ export async function POST(req: Request) {
         return new Response("Unauthorized", {status: 401});
     }
 
-    console.log('Session:', session);
-
-    const {age, sex, height, weight, fitnessLevel} = await req.json();
+    const {age, gender, height, weight, fitnessLevel} = await req.json();
 
     const availableExercises = ExerciseEnum.options.join(", ");
     const availableEquipment = EquipmentEnum.options.join(", ");
 
     const prompt = `
-    Generate a personalized 3-day split training program for a ${age}-year-old ${sex}, ${height} cm tall, weighing ${weight} kg, at a ${fitnessLevel} fitness level. The program should be well-structured, targeting specific muscle groups each day to ensure balanced development and adequate recovery.
+    Generate a personalized 3-day split training program for a ${age}-year-old ${gender}, ${height} cm tall, weighing ${weight} kg, at a ${fitnessLevel} fitness level. The program should be well-structured, targeting specific muscle groups each day to ensure balanced development and adequate recovery.
 
     **Adaptation Requirements:**
 1. The exercises should be tailored to the fitness level of a ${fitnessLevel}, offering appropriate challenges without risk of overtraining.
