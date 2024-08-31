@@ -65,8 +65,6 @@ export default async function HomePage() {
         }
     });
 
-    console.log('user', JSON.stringify(payload, null, 2));
-
     if (!payload) {
         redirect("/login");
     }
