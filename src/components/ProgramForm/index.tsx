@@ -74,7 +74,7 @@ export function ProgramForm({userProfile, children}: ProgramFormProps) {
         if (pathname === '/create') {
             router.push('/edit');
         } else {
-            router.refresh();
+            window.location.reload()
         }
     }
 
