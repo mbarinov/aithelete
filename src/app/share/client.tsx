@@ -9,7 +9,7 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import {Copy, Check} from "lucide-react"
+import {Copy, Check, Share2} from "lucide-react"
 
 interface SharePageProps {
     programId: string
@@ -19,6 +19,25 @@ interface SharePageProps {
 
 export function SharePage({programId, programName, programDescription}: SharePageProps) {
     const [isMarkdownCopied, setIsMarkdownCopied] = useState<boolean>(false)
+    const [isShared, setIsShared] = useState<boolean>(false)
+
+    const handleShare = async () => {
+        try {
+            const response = await fetch(`/api/markdown?id=${programId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch markdown');
+            }
+            const data = await response.json();
+            const markdownText = data.markdown;
+
+            await navigator.share({
+                title: programName,
+                text: markdownText,
+            })
+        } catch (error) {
+            console.error('Error sharing program:', error)
+        }
+    }
 
     const handleCopyMarkdown = async () => {
         try {
@@ -30,8 +49,7 @@ export function SharePage({programId, programName, programDescription}: SharePag
             const markdownText = data.markdown;
 
             await navigator.clipboard.writeText(markdownText);
-            setIsMarkdownCopied(true);
-            setTimeout(() => setIsMarkdownCopied(false), 3000);
+            setIsShared(true);
         } catch (error) {
             console.error('Error copying markdown:', error);
         }
@@ -43,6 +61,29 @@ export function SharePage({programId, programName, programDescription}: SharePag
             <p className="text-muted-foreground mb-6 dark:text-gray-400">{programDescription}</p>
 
             <div className="space-y-6">
+                <Card className="dark:bg-gray-800 dark:text-white">
+                    <CardHeader>
+                        <CardTitle>Share</CardTitle>
+                        <CardDescription>Share your training program as formatted
+                            Markdown text</CardDescription>
+                    </CardHeader>
+                    <CardFooter>
+                        <Button onClick={handleShare} className="dark:bg-gray-700 dark:text-white">
+                            {isShared ? (
+                                <>
+                                    <Check className="mr-2 h-4 w-4"/>
+                                    Shared!
+                                </>
+                            ) : (
+                                <>
+                                    <Share2 className="mr-2 h-4 w-4"/>
+                                    Share
+                                </>
+                            )}
+                        </Button>
+                    </CardFooter>
+                </Card>
+
                 <Card className="dark:bg-gray-800 dark:text-white">
                     <CardHeader>
                         <CardTitle>Copy as Markdown</CardTitle>
