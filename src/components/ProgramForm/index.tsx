@@ -20,7 +20,7 @@ import type {
 import {
     Barbell
 } from '@phosphor-icons/react/dist/ssr';
-import {useRouter} from 'next/navigation'
+import {useRouter, usePathname} from 'next/navigation'
 
 interface ProgramFormProps {
     children?: React.ReactNode;
@@ -45,6 +45,7 @@ export function ProgramForm({userProfile, children}: ProgramFormProps) {
     });
 
     const router = useRouter();
+    const pathname = usePathname();
 
     const metadata = object?.metadata as MetadataType;
     const exercises = object?.exercises as WorkoutType[];
@@ -68,6 +69,14 @@ export function ProgramForm({userProfile, children}: ProgramFormProps) {
         ];
         return steps[step - 1];
     };
+
+    const onEditHandler = () => {
+        if (pathname === '/create') {
+            router.push('/edit');
+        } else {
+            router.refresh();
+        }
+    }
 
     return (
         <div
@@ -161,9 +170,7 @@ export function ProgramForm({userProfile, children}: ProgramFormProps) {
                             {isLoading === false && (
                                 <TrainingProgram metadata={metadata}
                                                  exercises={exercises}
-                                                 onEdit={() => {
-                                                     router.refresh();
-                                                 }}
+                                                 onEdit={onEditHandler}
                                 />
                             )}
                         </motion.div>

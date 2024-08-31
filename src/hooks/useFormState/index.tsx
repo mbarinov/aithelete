@@ -4,7 +4,13 @@ import { FormData, FormField } from "@/types/formTypes";
 const TOTAL_STEPS = 5;
 
 export const useFormState = ({
-                               initialData = {},
+                               initialData = {
+                                    age: 24,
+                                    gender: 'other',
+                                    height: 180,
+                                    weight: 80,
+                                    fitnessLevel: 'beginner',
+                               },
                              }: {
   initialData?: FormData;
 } = {}) => {
