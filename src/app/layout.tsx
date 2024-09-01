@@ -6,6 +6,7 @@ import {auth} from "@/auth";
 import {logout} from "@/app/actions";
 import {cn} from "@/lib/utils";
 import {Theme} from '@radix-ui/themes';
+import {Analytics} from "@vercel/analytics/react"
 import '@radix-ui/themes/styles.css';
 
 import "./globals.css"
@@ -38,6 +39,7 @@ export default async function RootLayout({
             <main className="flex-grow">{children}</main>
             <Footer/>
         </Theme>
+        <Analytics/>
         </body>
         </html>
     )

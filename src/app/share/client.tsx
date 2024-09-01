@@ -77,9 +77,9 @@ export function SharePage({
     };
 
     return (
-        <section className="bg-gradient-to-r from-blue-500 to-purple-600 min-h-screen flex flex-col  items-center justify-center ">
+        <section className="bg-gradient-to-br from-purple-100 to-blue-100 dark:from-purple-900 dark:to-blue-900 min-h-[calc(100vh-57px)]  flex flex-col  items-center justify-center ">
             <div
-                className="container mx-auto px-4  py-8 max-w-2xl dark:bg-gray-900 dark:text-white rounded-lg backdrop-blur-sm shadow-lg">
+                className="container mx-auto px-4  py-8 max-w-2xl bg-white dark:bg-gray-900 dark:text-white rounded-lg backdrop-blur-sm shadow-lg">
                 <h1 className="text-3xl font-bold mb-2 dark:text-white">{programName}</h1>
                 <p className="text-muted-foreground mb-6 dark:text-gray-400">{programDescription}</p>
 
