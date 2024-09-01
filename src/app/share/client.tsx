@@ -51,12 +51,21 @@ export function SharePage({
         try {
             const response = await fetch(`/api/pdf-export?id=${programId}`);
             if (!response.ok) {
-                throw new Error('Failed to fetch markdown');
+                throw new Error('Failed to fetch PDF');
             }
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${programName}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
 
             setIsPDFSaved(true);
         } catch (error) {
-            console.error('Error sharing program:', error)
+            console.error('Error saving PDF:', error);
         }
     }
 
