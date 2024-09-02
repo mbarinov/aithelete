@@ -41,6 +41,8 @@ interface HomeClientProps {
 export function HomeClient({
                                trainingProgram
                            }: HomeClientProps) {
+
+    console.log(trainingProgram)
     return (
         <div className="flex flex-col min-h-screen bg-background">
             <header className="sticky top-[57px] z-10 bg-background">
@@ -132,13 +134,19 @@ export function HomeClient({
                                                                 className="grid md:grid-cols-2 grid-cols-1 gap-4">
                                                                 <div
                                                                     className="space-y-4">
+                                                                    {exercise.illustrations?.[0] ? (
+                                                                        <div className="h-48 rounded-md relative object-contain	">
                                                                     <Image
-                                                                        src="https://picsum.photos/300/200"
+                                                                        fill={true}
+                                                                        src={exercise.illustrations?.[0].url}
                                                                         alt={`${exercise.name} illustration`}
-                                                                        width={300}
-                                                                        height={200}
-                                                                        className="h-48 object-cover rounded-md"
-                                                                    />
+                                                                        className="object-contain	"
+                                                                    /></div>
+                                                                    ): (
+                                                                    <div
+                                                                        className="h-48 bg-gray-200 rounded-md"/>
+                                                                    )}
+
                                                                     <p>{exercise.description}</p>
                                                                 </div>
                                                                 <div

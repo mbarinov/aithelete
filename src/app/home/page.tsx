@@ -56,6 +56,7 @@ export default async function HomePage() {
                                     assistWeightAmount: true,
                                     assistWeightUnit: true,
                                     duration: true,
+                                    illustrations: true
                                 }
                             }
                         }

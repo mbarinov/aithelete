@@ -114,25 +114,38 @@ model Workout {
 }
 
 model Exercise {
-  id                 String  @id @default(cuid())
+  id                 String         @id @default(cuid())
   name               String
   description        String
   category           String
   muscleGroupCount   Int
-  sets               Int     @default(3)
-  reps               Int     @default(12)
+  sets               Int            @default(3)
+  reps               Int            @default(12)
   weightAmount       Float?
   weightUnit         String?
   assistWeightAmount Float?
   assistWeightUnit   String?
   duration           Int?
-  workout            Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  workout            Workout        @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   workoutId          String
+  illustrations      Illustration[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([workoutId])
+}
+
+model Illustration {
+  id         String   @id @default(cuid())
+  url        String // URL to the image
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  exerciseId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([exerciseId])
 }
 
 enum FitnessLevel {

@@ -1,23 +1,18 @@
 import {z} from "zod";
 
 export const EquipmentEnum = z.enum([
-    "Barbell",
-    "Dumbbell",
     "Bodyweight",
-    "Resistance Band",
-    "Machine",
-    "Kettlebell",
-    "Medicine Ball",
-    "Cable Machine",
-    "Smith Machine",
-    "TRX",
-    "Exercise Ball",
-    "Foam Roller",
+    "Barbell",
+    "Bench",
     "Pull-Up Bar",
-    "Battle Ropes",
-    "Rowing Machine",
-    "Elliptical",
-    "Treadmill",
+    "Assisted Pull-Up Machine",
+    "Dumbbells",
+    "Leg Press Machine",
+    "Lat Pulldown Machine",
+    "Seated Row Machine",
+    "Cable Machine",
+    "Leg Curl Machine",
+    "Leg Extension Machine"
 ]).describe("Types of equipment used in exercises");
 
 const CategoryEnum = z.enum(["Strength", "Cardio", "Flexibility"]).describe("Categories of exercises");
@@ -29,9 +24,7 @@ export const ExerciseEnum = z.enum([
     "Pull-Up",
     "Pull-Up (Assisted)",
     "Overhead Press",
-    "Rowing",
     "Bicep Curl",
-    "Tricep Extension",
     "Leg Press",
     "Lunge",
     "Plank",
@@ -40,26 +33,7 @@ export const ExerciseEnum = z.enum([
     "Dumbbell Fly",
     "Lat Pulldown",
     "Russian Twist",
-    "Battle Rope Slams",
-    "Kettlebell Swing",
-    "Goblet Squat",
-    "Front Squat",
-    "Sumo Deadlift",
-    "Romanian Deadlift",
-    "Chest Press Machine",
     "Seated Row",
-    "Cable Fly",
-    "Skull Crushers",
-    "Hammer Curl",
-    "Side Plank",
-    "Mountain Climbers",
-    "Burpees",
-    "Jumping Jacks",
-    "High Knees",
-    "Box Jump",
-    "Step-Up",
-    "Hip Thrust",
-    "Glute Bridge",
     "Cable Tricep Pushdown",
     "Leg Curl",
     "Leg Extension",
@@ -69,6 +43,10 @@ const WeightSchema = z.object({
     amount: z.number().describe("Amount of weight"),
     unit: z.enum(["kg", "lbs"]).describe("Unit of weight"),
 }).describe("Schema for weight");
+
+const IllustrationSchema = z.object({
+    url: z.string().url().describe("URL of the illustration"),
+}).describe("Schema for an illustration");
 
 const ExerciseSchema = z.object({
     name: ExerciseEnum.describe("Name of the exercise"),
@@ -82,6 +60,7 @@ const ExerciseSchema = z.object({
     weight: WeightSchema.optional().nullable().describe("Weight used in the exercise"),
     assistWeight: WeightSchema.optional().nullable().describe("Assistance weight used in the exercise"),
     duration: z.number().optional().describe("Duration of the exercise in seconds"),
+    illustrations: z.array(IllustrationSchema).optional().describe("Illustrations for the exercise"),
 }).describe("Schema for an exercise");
 
 export const WorkoutSchema = z.object({
@@ -114,4 +93,3 @@ export const TrainingProgramSchema = z.object({
 export type MetadataType = z.infer<typeof MetadataSchema>;
 export type WorkoutType = z.infer<typeof WorkoutSchema>;
 export type ExerciseType = z.infer<typeof ExerciseSchema>;
-export type TrainingProgramType = z.infer<typeof TrainingProgramSchema>;

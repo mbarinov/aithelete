@@ -3,6 +3,9 @@ import {openai} from "@ai-sdk/openai";
 import {auth} from "@/auth"
 import {TrainingProgramSchema, ExerciseEnum, EquipmentEnum} from "@/lib/schema"
 import prisma from "@/prisma";
+import {
+    getIllustrationsByExercise
+} from "@/app/api/generate-program/illustrations";
 
 export const maxDuration = 60;
 
@@ -97,17 +100,26 @@ Advanced (12+ months): Focus on hypertrophy, maximum strength, and muscle defini
                 duration: workout.duration,
                 caloriesBurned: workout.caloriesBurned,
                 exercises: {
-                    create: workout.workout.map(exercise => ({
-                        name: exercise.name,
-                        description: exercise.description,
-                        category: exercise.category,
-                        muscleGroupCount: exercise.muscleGroupCount,
-                        sets: exercise.sets,
-                        reps: exercise.reps,
-                        weightAmount: exercise.weight ? exercise.weight.amount : null,
-                        weightUnit: exercise.weight ? exercise.weight.unit : null,
-                        duration: exercise.duration || null,
-                    })),
+                    create: workout.workout.map(exercise => {
+                        const illustrations = getIllustrationsByExercise(exercise.name);
+
+                        return {
+                            name: exercise.name,
+                            illustrations: {
+                                create: illustrations.map(illustration => ({
+                                    url: illustration,
+                                }))
+                            },
+                            description: exercise.description,
+                            category: exercise.category,
+                            muscleGroupCount: exercise.muscleGroupCount,
+                            sets: exercise.sets,
+                            reps: exercise.reps,
+                            weightAmount: exercise.weight ? exercise.weight.amount : null,
+                            weightUnit: exercise.weight ? exercise.weight.unit : null,
+                            duration: exercise.duration || null,
+                        }
+                    }),
                 },
             }))
 
