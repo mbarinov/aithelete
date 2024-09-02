@@ -40,7 +40,7 @@ Requirements:
 
 Split Focus: Design a 3-day split workout program, each day focusing on different major muscle groups or combinations (e.g., Chest/Triceps, Back/Biceps, Legs/Shoulders). Ensure no significant overlap in targeted muscle groups on consecutive days to allow for optimal recovery.
 
-Exercise Structure: Each workout day should include 4 to 8 exercises selected from the provided list. Specify:
+Exercise Structure: Each workout day should include from 4 up to 8 exercises selected from the provided list. Specify:
 
 The name of each exercise.
 The number of sets and repetitions.
