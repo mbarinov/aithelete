@@ -27,8 +27,6 @@ export const ExerciseEnum = z.enum([
     "Bicep Curl",
     "Leg Press",
     "Lunge",
-    "Plank",
-    "Crunch",
     "Leg Raise",
     "Dumbbell Fly",
     "Lat Pulldown",
@@ -37,6 +35,14 @@ export const ExerciseEnum = z.enum([
     "Cable Tricep Pushdown",
     "Leg Curl",
     "Leg Extension",
+    "Hyperextension",
+    "Calf Raise",
+    "Chest Fly",
+    "Dumbbell Row",
+    "Hammer Curl",
+    "Glute Bridge",
+    "Face Pull",
+    "Tricep Extension",
 ]).describe("Types of exercises");
 
 const WeightSchema = z.object({
@@ -56,10 +62,9 @@ const ExerciseSchema = z.object({
     muscleGroupCount: z.number().describe("Number of muscle groups targeted"),
     equipment: z.array(EquipmentEnum).optional().describe("Equipment used for the exercise"),
     sets: z.number().default(3).describe("Number of sets"),
-    reps: z.number().default(12).describe("Number of repetitions"),
+    reps: z.number().optional().nullable().describe("Number of repetitions"),
     weight: WeightSchema.optional().nullable().describe("Weight used in the exercise"),
     assistWeight: WeightSchema.optional().nullable().describe("Assistance weight used in the exercise"),
-    duration: z.number().optional().describe("Duration of the exercise in seconds"),
     illustrations: z.array(IllustrationSchema).optional().describe("Illustrations for the exercise"),
 }).describe("Schema for an exercise");
 
@@ -89,7 +94,18 @@ export const TrainingProgramSchema = z.object({
     exercises: z.array(WorkoutSchema).describe("List of workouts in the training program"),
 }).describe("Schema for a training program");
 
+export const CritiqueSchema = z.object({
+    recommendations: z.array(z.string().describe("Recommendation for improvement"))
+        .describe("List of recommendations for improvement"),
+    effectivenessScore: z.number().min(0).max(3).describe("Effectiveness" +
+        " score, ranging from 0 to 3"),
+    safetyScore: z.number().min(0).max(2).describe("Safety score, ranging from 0 to 2"),
+    balanceScore: z.number().min(0).max(3).describe("Balance score, ranging from 0 to 3"),
+    alignmentScore: z.number().min(0).max(2).describe("Alignment with Individual Goals score, ranging from 0 to 2"),
+}).describe("Schema for critique, score, and recommendations of the training program");
 
+export type TrainingProgramType = z.infer<typeof TrainingProgramSchema>;
 export type MetadataType = z.infer<typeof MetadataSchema>;
 export type WorkoutType = z.infer<typeof WorkoutSchema>;
 export type ExerciseType = z.infer<typeof ExerciseSchema>;
+export type CritiqueType = z.infer<typeof CritiqueSchema>;
