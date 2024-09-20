@@ -120,7 +120,7 @@ model Exercise {
   category           String
   muscleGroupCount   Int
   sets               Int            @default(3)
-  reps               Int            @default(12)
+  reps               Int?           @default(12)
   weightAmount       Float?
   weightUnit         String?
   assistWeightAmount Float?
