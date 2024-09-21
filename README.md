@@ -14,9 +14,10 @@ To get a local copy up and running, follow these simple steps.
 
 ## 📂 Important Files
 
-- [LangGraph Agent](src/lib/agent/index.ts)
-- [Generate Node](src/lib/agent/generateTrainingPlan.ts)
-- [Critique Node](src/lib/agent/critiqueTrainingPlan.ts)
+- [LangGraph Agent](src/lib/agent/index.ts) - The main agent that orchestrates generating and critiquing training plans.
+- [Generate Node](src/lib/agent/generateTrainingPlan.ts) - The node that generates a training plan.
+- [Critique Node](src/lib/agent/critiqueTrainingPlan.ts) - The node that critiques a training plan.
+- [Prompts](src/lib/agent/nodes/prompts.ts) - The prompts used by the agent to generate and critique training plans.
 
 ### Prerequisites
 
