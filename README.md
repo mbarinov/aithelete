@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🏋️‍♂️ AIthelete
 
-## Getting Started
+Welcome to **AIthelete**! This project is an AI Agent designed to create training plans. By providing detailed feedback and recommendations, it ensures that workout plans are effective, safe, and tailored to individual needs.
 
-First, run the development server:
+### 🛠️ Built With
+- Next.js
+- TypeScript 
+- LangChain
+- LangGraph
+
+## 🚀 Getting Started
+
+To get a local copy up and running, follow these simple steps.
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- Node.js
+- pnpm
+- PostgreSQL
+- OpenAI API Keys
+
+### Installation
+
+1. Clone the repo:
+    ```bash
+    git clone https://github.com/mbarinov/aithelete.git
+    ```
+2. Navigate to the project directory:
+    ```bash
+    cd aithelete
+    ```
+3. Install dependencies:
+    ```bash
+    pnpm install
+    ```
+4. Set up your environment variables by copying `.env.example` to `.env` and filling in the required values:
+    ```bash
+    cp .env.example .env
+    ```
+5. Push the Prisma schema to your database:
+    ```bash
+    npx prisma db push
+    ```
+
+### Running the Development Server
+
+Start the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
+Open http://localhost:3000 with your browser to see the result.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### 📜 License
+Distributed under the MIT License. See LICENSE for more information.  
+### 🧑‍💻 Authors
+- **Max Barinov** - [@mbarinov](https://maxbarinov.com)
