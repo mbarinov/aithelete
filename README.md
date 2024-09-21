@@ -12,6 +12,12 @@ Welcome to **AIthelete**! This project is an AI Agent designed to create trainin
 
 To get a local copy up and running, follow these simple steps.
 
+## 📂 Important Files
+
+- [LangGraph Agent](src/lib/agent/index.ts)
+- [Generate Node](src/lib/agent/generateTrainingPlan.ts)
+- [Critique Node](src/lib/agent/critiqueTrainingPlan.ts)
+
 ### Prerequisites
 
 Make sure you have the following installed:
