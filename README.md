@@ -8,8 +8,10 @@ Welcome to **AIthelete**! This project is an AI Agent designed to create trainin
 - LangChain
 - LangGraph
 
-## 🚀 Getting Started
+## 🚀 Demo
+Check out the live demo: [AIthelete Demo](https://aithelete.vercel.app/)
 
+## 🚀 Getting Started
 To get a local copy up and running, follow these simple steps.
 
 ## 📂 Important Files
